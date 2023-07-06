@@ -83,22 +83,31 @@ public class DataHelper {
     }
 
     @Value
+    public static class CardNumber {
+        String cardNumber;
+    }
+
+    public static CardNumber getCardNumber1() {
+        return new CardNumber("5559 0000 0000 0001");
+    }
+
+    public static CardNumber getCardNumber2() {
+        return new CardNumber("5559 0000 0000 0002");
+    }
+
+    public static CardNumber getRandomCardNumber() {
+        return new CardNumber("5559 0000 0000 0008");
+    }
+
+    @Value
     public static class TransferInfo {
         String from;
         String to;
         int amount;
     }
+    public static TransferInfo getTransferInfo(CardNumber from, CardNumber to, int amount) {
 
-    public static TransferInfo getTransfer1Info(int amount) {
-        return new TransferInfo("5559 0000 0000 0001", "5559 0000 0000 0002", amount);
-    }
-
-    public static TransferInfo getTransfer2Info(int amount) {
-        return new TransferInfo("5559 0000 0000 0002", "5559 0000 0000 0001", amount);
-    }
-
-    public static TransferInfo getRandomTransferInfo(int amount) {
-        return new TransferInfo("5559 0000 0000 0001", "5559 0000 0000 0008", amount);
+        return new TransferInfo(from.getCardNumber(), to.getCardNumber(), amount);
     }
 
     @Value
@@ -128,7 +137,7 @@ public class DataHelper {
         return new CardBalance(randomBalance);
     }
 
-    public static int cardsRequest1(String token, int statusCode, int value) {
+    public static int gettingBalanceCard1(String token, int statusCode, int balance) {
         given()
                 .spec(requestSpec)
                 .header("Authorization", "Bearer " + token)
@@ -136,12 +145,12 @@ public class DataHelper {
                 .get("/api/cards")
                 .then()
                 .statusCode(statusCode)
-                .body("[1].balance", equalTo(value));
+                .body("[1].balance", equalTo(balance));
 
-        return value;
+        return balance;
     }
 
-    public static int cardsRequest2(String token, int statusCode, int value) {
+    public static int gettingBalanceCard2(String token, int statusCode, int balance) {
         given()
                 .spec(requestSpec)
                 .header("Authorization", "Bearer " + token)
@@ -149,10 +158,11 @@ public class DataHelper {
                 .get("/api/cards")
                 .then()
                 .statusCode(statusCode)
-                .body("[0].balance", equalTo(value));
+                .body("[0].balance", equalTo(balance));
 
-        return value;
+        return balance;
     }
+
 
 }
 
